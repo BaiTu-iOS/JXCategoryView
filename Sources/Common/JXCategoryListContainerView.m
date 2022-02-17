@@ -9,6 +9,7 @@
 #import "JXCategoryListContainerView.h"
 #import <objc/runtime.h>
 #import "RTLManager.h"
+#import "JXCategoryCollectionViewFlowLayout.h"
 
 @interface JXCategoryListContainerViewController : UIViewController
 @property (copy) void(^viewWillAppearBlock)(void);
@@ -111,7 +112,7 @@
         [RTLManager horizontalFlipViewIfNeeded:self.scrollView];
         [self.containerVC.view addSubview:self.scrollView];
     }else {
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        JXCategoryCollectionViewFlowLayout *layout = [[JXCategoryCollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
@@ -150,7 +151,7 @@
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];
-
+    
     UIResponder *next = newSuperview;
     while (next != nil) {
         if ([next isKindOfClass:[UIViewController class]]) {
@@ -163,7 +164,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
+    
     self.containerVC.view.frame = self.bounds;
     if (self.containerType == JXCategoryListContainerType_ScrollView) {
         if (CGRectEqualToRect(self.scrollView.frame, CGRectZero) ||  !CGSizeEqualToSize(self.scrollView.bounds.size, self.bounds.size)) {
@@ -254,7 +255,7 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(listContainerViewDidScroll:)]) {
         [self.delegate listContainerViewDidScroll:scrollView];
     }
-
+    
     if (!scrollView.isDragging && !scrollView.isTracking && !scrollView.isDecelerating) {
         return;
     }
@@ -310,7 +311,7 @@
         self.willDisappearIndex = -1;
         self.willAppearIndex = -1;
     }
-
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(listContainerViewDidEndDecelerating:)]) {
         [self.delegate listContainerViewDidEndDecelerating:scrollView];
     }
@@ -369,7 +370,7 @@
         }
     }
     [_validListDict removeAllObjects];
-
+    
     if (self.containerType == JXCategoryListContainerType_ScrollView) {
         self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width*[self.delegate numberOfListsInlistContainerView:self], self.scrollView.bounds.size.height);
     }else {
@@ -398,7 +399,7 @@
         [self.containerVC addChildViewController:(UIViewController *)list];
     }
     _validListDict[@(index)] = list;
-
+    
     if (self.containerType == JXCategoryListContainerType_ScrollView) {
         [list listView].frame = CGRectMake(index*self.scrollView.bounds.size.width, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
         [self.scrollView addSubview:[list listView]];
@@ -446,7 +447,7 @@
                     [list listView].frame = CGRectMake(index*self.scrollView.bounds.size.width, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
                     [self.scrollView addSubview:[list listView]];
                     [RTLManager horizontalFlipViewIfNeeded:[list listView]];
-
+                    
                     if (list && [list respondsToSelector:@selector(listWillAppear)]) {
                         [list listWillAppear];
                     }
@@ -462,7 +463,7 @@
                 }
                 [list listView].frame = cell.contentView.bounds;
                 [cell.contentView addSubview:[list listView]];
-
+                
                 if (list && [list respondsToSelector:@selector(listWillAppear)]) {
                     [list listWillAppear];
                 }

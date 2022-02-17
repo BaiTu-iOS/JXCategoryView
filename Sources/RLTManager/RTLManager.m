@@ -10,7 +10,8 @@
 @implementation RTLManager
 
 + (BOOL)supportRTL {
-    return [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:UIView.appearance.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
+//    return [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:UIView.appearance.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
+    return NO;
 }
 
 + (void)horizontalFlipView:(UIView *)view {
